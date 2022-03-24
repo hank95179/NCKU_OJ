@@ -1,67 +1,30 @@
-#include <bits/stdc++.h>
-#define pb push_back
-#define mp make_pair
-#define add insert
-#define Int long long
-#define pi acosl(-1)
-#define MEM(x) memset(x,0,sizeof(x))
-#define x first
-#define y second
+#include <iostream>
+#include <vector>
+#include <array>
 using namespace std;
 
-struct BIT {
-	vector<Int> A;
-	int n;
-	BIT(int _n) {
-		n=_n;
-		A.resize(n+1);
-	}
+int mod = 1000000007;
 
-	int lowbit(int idx) {
-		return (idx&(-idx));
-	}
-
-	void update(int idx, Int v) {
-		for(int i = idx+1; i <= n; i += lowbit(i)) A[i] += v;
-	}
-
-	Int query(int idx)
-	{
-		Int res = 0;
-		for(int i = idx+1; i; i -= lowbit(i)) res += A[i];
-		return res;
-	}
-};
-
-
-void solve(){
-	int n; cin >> n;
-	vector<Int> A(n), B{0}, Buni;
-	for(auto& it: A) cin >> it;
-	for(auto it: A) B.pb(B.back() + it);
-	Buni = B;
-	sort(Buni.begin(), Buni.end());
-	Buni.erase(unique(Buni.begin(), Buni.end()), Buni.end());
-
-
-	//BIT
-	BIT T1(Buni.size());
-	Int ans = 0;
-	for(int i = 0; i < B.size(); i++) {
-		int idx = lower_bound(Buni.begin(), Buni.end(), B[i]) - Buni.begin();
-		Int cnt = i - T1.query(idx);
-		ans += cnt;
-		T1.update(idx, 1LL);
-	}
-	cout << ans << endl;
-
-
-}
-int main(){
-	ios::sync_with_stdio(0); cin.tie(0);
-
-	int t=1;
-	//cin >> t;
-	while(t--) solve();
-	return 0;
+int main(void) {
+    int n;
+    cin >> n;
+    
+    vector<array<int, 2>> dp(max(3, n + 1));
+    dp[0][0] = 2;
+    dp[0][1] = 1;
+    dp[1][0] = 7;
+    dp[1][1] = 3;
+    for (int i = 2; i < n; ++i) {
+        dp[i][0] = dp[i - 1][0];
+        dp[i][0] = (dp[i][0] + dp[i - 1][0]) % mod;
+        dp[i][0] = (dp[i][0] + dp[i - 1][1]) % mod;
+        dp[i][0] = (dp[i][0] + dp[i - 1][1]) % mod;
+        dp[i][0] = (dp[i][0] + dp[i - 2][0]) % mod;
+        
+        dp[i][1] = (dp[i - 1][0] + dp[i - 1][1]) % mod;
+    }
+    
+    cout << dp[n-1][0] << '\n';
+    
+    return 0;
 }

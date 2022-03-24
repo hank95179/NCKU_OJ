@@ -13,7 +13,7 @@ void solve(){
     int n = 0;
     cin >> n;
     long long ans=0;
-    ans = dp(n-1) + dp(n-2);
+    ans = dp(n);
     printf("%d\n",ans%divider);
 }
 int dp(int j){
